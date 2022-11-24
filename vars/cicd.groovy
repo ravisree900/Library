@@ -10,5 +10,5 @@ def newBuild()
 
 def newDeploy( "jobname","ip","appname")
 {
-sh "scp /var/lib/jenkins/workspace/${jobname}/webapp/target/webapp.war ubunutu@${ip}:/var/Iib/tomcat9/webapps/${appname}. war"
+sh "scp /var/lib/jenkins/workspace/${jobname}/webapp/target/webapp.war ubuntu@${ip}:/var/Iib/tomcat9/webapps/${appname}. war"
 }
