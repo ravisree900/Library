@@ -1,0 +1,54 @@
+SETUP OF EKS CLUSTER 
+===========================
+1. install eksctl
+
+ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+  
+ sudo mv /tmp/eksctl /usr/local/bin
+
+2. install kubectl 
+  
+   sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2
+   
+   curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+
+   echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   
+   sudo apt-get update
+
+   sudo apt-get install -y kubectl
+
+3. to create Eks cluster through declarative Method
+   
+   (a) write an yaml file and the script inside the file should be
+
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-eks-cluster
+  region: us-west-2
+
+nodeGroups:
+  - name: my-ng
+    instanceType: t2.small
+    desiredCapacity: 3
+    ssh:
+      publicKeyName: my-keypair
+...
+
+
+
+in the above file you have to specify [ clustername, instance-type, region , keypair, no.of nodes]
+
+
+4. To create a cluster 
+   
+:: eksctl create cluster -f <yaml_file>
+
+
+5. To delete cluster 
+
+::  eksctl delete cluster --name <my-eks-cluster>
