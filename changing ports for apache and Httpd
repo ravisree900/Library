@@ -1,0 +1,74 @@
+ Changung Ports for httpd using Amazon Linux
+ ============================================= 
+ sudo yum update
+    2  sudo yum -y update
+    3  sudo yum install -y httpd
+    4  httpd -version
+    5  cd /etc
+    6  ls
+    7  cd httpd/
+    8  ls
+    9  cd conf
+   10  ls
+   11  sudo vim httpd.conf
+   12  cd
+   13  sudo system ctl
+   14  sudo systemctl httpd  restart
+   15  history
+   16  systemctl status httpd
+   17  systemctl start httpd
+   18  systemctl status httpd
+   19  systemctl enable httpd
+   20  sudo systemctl enable httpd
+   21  systemctl start httpd
+   22  sudo systemctl start httpd
+   23  systemctl status httpd
+   24  history
+   25  sudo systemctl stop httpd
+   26  sudo systemctl status httpd
+   27  systemctl status httpd
+   28  sudo systemctl status httpd
+   29  exit
+========================================================================================================================
+
+Changing Ports for Apache2 using Ubuntu
+========================================
+ sudo apt-get update
+    2  sudo apt-get install -y apache
+    3  sudo apt-get install -y httpd
+    4  sudo apt-get install -y apache2
+    5  apache --version
+    6  apache -version
+    7  apache version
+    8  apache2 --version
+    9  ls
+   10  cd /var
+   11  ls
+   12  cd lib
+   13  ls
+   14  cd ..
+   15  ls
+   16  cd www
+   17  ls
+   18  cd html
+   19  ls
+   20  vim index.html
+   21  cd
+   22  sudo nano /etc/apache2/apache2.conf
+   23  apache2 -version
+   24  apache2 --hostport=8080
+   25  apache2 --hostport 8080
+   26  cd /etc
+   27  ls
+   28  cd httpd
+   29  cd htt
+   30  cd apache2/
+   31  ls
+   32  cd apache2.conf
+   33  sudo vim apache2.conf
+   34  sudo vim ports.conf
+   35  cd
+   36  sudo service apache2 restart
+   37  exit
+========================================================================================================
+
