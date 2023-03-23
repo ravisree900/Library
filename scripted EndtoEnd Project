@@ -1,0 +1,41 @@
+node
+{
+    stage('Continious Download')
+    {
+        git 'https://github.com/intelliqittrainings/maven.git'
+    }
+    stage('Continious Build')
+    {
+        sh 'mvn package'
+    }
+    stage('build docker image')
+    {
+        sh 'cp /var/lib/jenkins/workspace/End-to-End-Project/webapp/target/webapp.war  . '
+        sh '''cat >dockerfile<<EOF
+FROM tomee
+MAINTAINER ravindra
+COPY . /usr/local/tomee/webapp/testapp.war'''
+    }
+    stage('docker image creation')
+    {
+        sh 'docker build -t ravisree900/tomcatapp .'
+    }
+    stage('push docker image into docker registry')
+    {
+        sh 'sudo docker login -u ravisree900 -p Sree@6367+-'
+        sh 'sudo docker push ravisree900/tomcatapp'
+    }
+    stage('deploy docker image into QA servers')
+    {
+        sh 'ssh ubuntu@172.31.34.62  ansible-playbook deploy_tomcat.yml -b'
+    }
+     stage('Continious Testing')
+    {
+        git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
+        sh 'java -jar /var/lib/jenkins/workspace/End-to-End-Project/testing.jar'
+    }
+    stage('deploy it into production environment')
+    {
+        sh 'ssh ubuntu@172.31.45.5 kubectl apply -f deploy_tomcat.yml'
+    }
+}
