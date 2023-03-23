@@ -1,0 +1,70 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage("Continious Download")
+        {
+            steps
+            {
+                git ' https://github.com/intelliqittrainings/maven.git'
+            }
+        }
+        stage("Continious Build")
+        {
+            steps
+            {
+                sh 'mvn package'
+            }
+        }
+        stage("dockerfile design")
+        {
+            steps
+            {
+               sh 'cp /var/lib/jenkins/workspace/endtoend/webapp/target/webapp.war  .'
+               
+               sh '''cat > dockerfile << EOF
+                     FROM tomee
+                     MAINTAINER ravindra
+                     COPY  webapp.war  /usr/local/tomee/webapps/testapp.war'''
+            }
+        }
+        stage("Docker image Creation")
+        {
+            steps
+            {
+                sh 'sudo docker build -t ravisree900/javaapp .'
+            }
+        }
+         stage("push Docker image")
+        {
+            steps
+            {
+                sh 'sudo docker login -u ravisree900 -p Sree@6367+-'
+                sh 'sudo docker push ravisree900/javaapp'
+            }
+        }
+        stage("deploy docker image into QA servers using Ansible")
+        {
+            steps
+            {
+                sh 'ssh ubuntu@172.31.34.62 ansible-playbook deploy_app.yml -b'
+            }
+        }
+        stage("download and run selenium scripts")
+        {
+            steps
+            {
+               git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
+               sh 'java -jar /var/lib/jenkins/workspace/endtoend/testing.jar'
+            }
+        }
+        stage("deploy into kubernetes cluster")
+        {
+            steps
+            {
+                sh 'ssh ubuntu@172.31.45.5 kubectl apply -f deployment_app.yml'
+            }
+        }
+    }
+}
