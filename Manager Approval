@@ -1,0 +1,30 @@
+go to Jenkins Dashboard
+
+click on manage Jenkins
+
+click on manage users
+
+create
+
+give details
+
+create user
+============================================
+
+dashboard
+
+Goto Pipeline job
+
+go to Syntax
+
+search Input
+
+Message : need manager approval
+
+advanced
+allow submitter: give user name of u created above
+
+generate groovy code
+
+copy and paste in pipeline
+=======================================================
