@@ -1,0 +1,1 @@
+aws ec2 authorize-security-group-ingress --group-id sg-0199fe6aa34d20218 --region eu-west-3 --protocol tcp --port 30115 --cidr 0.0.0.0/0
