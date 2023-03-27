@@ -1,0 +1,213 @@
+Helm Chart is a very feature-rich framework when you are working with complex Kubernetes cluster and deployment. Helm chart provides a very convenient way to pass values.yaml and use it inside your Helm Chart
+
+Create your first Helm Chart
+We are going to create our first helloworld Helm Chart using the following command
+
+helm create helloworld
+
+tree helloworld 
+
+Update the service.type from ClusterIP to NodePort inside the values.yml
+
+To install the chart
+-------------------------------
+helm install <FIRST_ARGUMENT_RELEASE_NAME> <SECOND_ARGUMENT_CHART_NAME>
+
+helm install myhelloworld helloworld
+
+Verify the helm install command
+-----------------------------------
+helm list -a
+
+Get kubernetes Service details and port
+----------------------------------------------
+kubectl get service
+
+
+
+=========================================
+How to ADD upstream Helm chart repository
+------------------------------------------
+helm repo add <REPOSITORY_NAME> <REPOSITORY_URL>
+
+
+To add any chart repository you should know the name and repository url.
+------------------------------------------
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+
+Verify the repository
+---------------------------------
+helm search repo bitnami
+
+To see the list of repositories added
+----------------------------------------
+helm repo list
+
+Updating the helm repo
+--------------------------
+Lets see how you can update your helm repositories. (The update command is necessary if haven’t updated your Helm chart repository in a while, so might miss some recent changes)
+
+Here is the command to update Helm repository
+
+helm repo update
+
+Removong a repository
+-----------------------------
+helm repo remove bitnami
+
+===========================================
+Demo
+===============
+In this tutorial, we are going to install WordPress with MariaDB using the Helm Chart on Kubernetes cluster. With this installation, we are going to see - How we can upgrade as well as rollback the Helm Chart release of WordPress. This complete setup inherited the benefits of the Kubernetes .i.e. scalability and availability.
+
+
+Since we are installing WordPress, so we need to have a database running behind the WordPress application. From the database standpoint, we are going to use MariaDB. Helm chart ships all these components in a single package, so that we need not worry about installing each component separately.
+
+
+To search for all wordpress relates repositories
+helm search hub wordpress
+
+If the output of the above command is too large we can use
+helm search hub wordpress  --max-col-width=0
+
+Ensure that the binami is installed
+-------------------------------------------
+helm repo add bitnami https://charts.bitnami.com/bitnami
+heml repo list
+
+Readme.md
+=================
+This Readme.md contains the installation instructions and it can be viewed using the following command
+
+helm show readme bitnami/wordpress --version 10.0.3
+
+To update the username and password
+vim wordpress-values.yml
+
+wordpressUsername: admin
+wordpressPassword: admin
+wordpressEmail: selenium.saikrishna@gmail.com
+wordpressFirstName: Sai
+wordpressLastName: Krishna
+wordpressBlogName: mywordpress.com
+service: 
+  type: LoadBalancer
+
+Create a new namespace
+kubectl create namespace nswordpress
+
+Versify the namesapce
+kubectl get namespace
+
+Run the below command to install wordpess in the namepsace
+helm install wordpress bitnami/wordpress --values=wordpress-values.yaml --namespace nswordpress --version 10.0.3
+
+
+To see the resources running in a specific namespace
+watch -x kubectl get all --namespace nswordpress
+
+To remove
+kubect uninstall wordpress
+
+
+Converting k8 defintion files to helm
+==========================================
+Objective 1 : - At first we are going to create simple Kubernetes deployment(k8s-deployment.yaml)` and in that deployment we are going to deploy a microservice application.
+
+Objective 2 : - Secondly we are going to `create service(k8s-service.yaml) for exposing the deployment as a service on NodePort.
+
+Objective 3 : - Here we are going to convert Kubernetes deployment(k8s-deployment.yaml) and create service(k8s -service.yaml) into a Helm Chart YAMls.
+
+Step 1
+=============
+Create deployment.yml file and also a service file of NodePort type
+
+Step 2
+==============
+helm create demochart
+tree demochart
+
+Step 3
+===============
+Go into the demochart folder
+cd demochart
+
+The first YAML which we are converting is chart.yaml but it is optional and does not require any change but it would be nice to update some value with regards to your project name.
+
+vim chart.yml
+We can just edit the name (not mandatory)
+
+In templates folder edit deployment.yml
+vim deployment.yml
+Edit the container port
+
+cd ..
+
+In values.yml
+Edit the type: from clusterip to NodePort
+port: 8080
+image:
+ tag: "latest"
+
+==================================
+Come out of the demochart folder
+
+
+To install the above chart
+helm install mytomcat demochart
+
+To see the components
+kubectl get all
+
+To delete 
+helm uninstall mytomcat
+============================================================================
+Install prometheus and grafana
+======================================
+
+helm repo add stable https://charts.helm.sh/stable
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+
+helm search repo prometheus-community
+
+To install prometheus
+----------------------------
+helm install prometheus prometheus-community/kube-prometheus-stack
+
+kubectl get pods
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
