@@ -1,0 +1,8 @@
+ how to Attach ebs volume to ec2 instance and mount it to  ec2.
+commands used
+df -h
+lsblk
+file -s /dev/xvdf
+mkfs -t xfs /dev/xvdf
+mkdir -p /apps/volume/new-volume
+mount /dev/xvdf /apps/volume/new-volume
