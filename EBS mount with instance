@@ -40,5 +40,16 @@ mount /dev/xvdf /apps/volume/new-volume
 after this select the instance 
 
 in below click on storage here we have attached storage for this instances.
+===========================================================================================
 
+if u need to modify this storage from 20Gib to 30Gib
 
+select instance and  go down and click on storage
+click on 20gib volume id
+right click and modify volume
+select 30Gib (here we could not decrease the volume we can only increase the volume) and click on modify.
+connect this instance in git bash
+df -h
+sudo xfs_growfs /dev/xvdf
+df -h
+here we can observer the volume can modified here.
