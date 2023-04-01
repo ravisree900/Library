@@ -1,0 +1,44 @@
+EBS mount with instance
+------------------------
+
+Create on EC2 instance
+
+instance connect with git bash
+
+execute df -h
+here we can see the volume of instance with filename as /dev/xvda1
+
+to mount the volume for this instance
+
+in left side we have EBS volumes click on that
+
+create a volume 
+
+volume type: General purpose SSD(gp2) default
+size: 20  we have 30Gib is free for us
+
+create a volume
+
+attach it to instance
+
+right click on new volume and click on attach to instance
+select ur instance
+click on attach volume
+
+go to git bash
+
+df -h
+lsblk
+sudo su -
+lsblk 
+file -s /dev/xvdf
+mkfs -t xfs /dev/xvdf
+file -s /dev/xvdf
+mkdir -p /apps/volume/new-volume
+mount /dev/xvdf /apps/volume/new-volume
+
+after this select the instance 
+
+in below click on storage here we have attached storage for this instances.
+
+
