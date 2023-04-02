@@ -1,0 +1,33 @@
+Elastic IP creation
+====================
+
+Create one instance
+copy public ip and save in notepad
+stop the instance and wait for 1minute
+once again start the instance and copy the public ip and save in notepad
+compare both the ip address are diffrent 
+
+if u want to same public ip when u stop or start the instance then we go with elastic ip
+
+on left side go to bottom in network and security section there is elastic ip click on it
+
+click on Allocate elastic ip address
+click on allocate
+here one public ip is generated we need to link this ip with instance
+select the ip address and click on actions
+click on associate public ip
+in instance select the running instance
+click on associate in below
+
+come back to EC2 dashboard
+click on instance and see the public ip, here it is the elastic ip
+stop the instance and start the instance the public ip is not changed
+-------------------------------------------------------------------------------------------------------------------
+
+if u need to remove that elastic ip
+
+in EC2 dashboard click on elastic ip
+select the ip and click on Actions
+click on Release elastic ip
+here it will be deleted.
+========================================================================================================================
