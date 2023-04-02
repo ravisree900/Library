@@ -1,0 +1,54 @@
+AMI Creation
+============
+
+Launch one instance
+copy SSH and connect it in git bash
+execute the commands
+
+sudo apt-get update
+sudo apt-get install -y tomcat9
+sudo apt-get install -y tomcat9-admin
+cd /etc/tomcat9
+sudo vim tomcat-user.xml
+delete all the content and paste here sir given data
+sudo service tomcat9 restart
+exit
+
+go to AWS dashboard and select the instance
+copy public ip and paste it in browser:8080
+here tomcat is running
+
+select the instance and click on actions
+click on image and templates
+create image
+Name: tomcatAMI
+click on create image
+-----------------------------------------------------------------
+on left side click on AMI
+select the AMI wait in status it comes for Available (it takes some time)
+go back to EC2 dashboard
+Launch another instance
+give some name to instance
+go to AMI section click on MyAMI'S
+here select the customised AMI which is tomcatAMI
+give Keypair
+in network section give all traffic
+No.of instances 2
+then click on Launch
+
+After this copy public ip of new instance and paste it in browser:8080
+here tomcat is in running state
+=============================================================================================================================
+
+To Release this AMI
+===================
+go to AMI
+select the ami and click on actions
+click on Deregister AMI
+left side elastic block store
+click on snapshots
+select snapshot instance 
+click on actions
+delete Snapshots
+it will be delete
+==================================================================================================================================
