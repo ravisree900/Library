@@ -1,0 +1,34 @@
+Auto Scaling
+=============
+
+on left side Auto Scaling
+click on Launch configuration
+click on create launch configuration
+Give name "my_launch"
+select AMI as "ubuntu"
+instance type "t2.micro"
+select keypair 
+click on launch template
+click on view launch template
+
+go to dashboard
+click on Auto Scaling group
+give name "mylaunch"
+click on Next
+Next
+Next
+give group all are 2
+click on Next
+skip and review
+click on crete Auto Saling group
+
+go to EC2 dashboard
+click on instances
+here new instances automatically came here within 1minute if u terminate this instances it will recreate it
+------------------------------------------------------------------------------------------------------------------------
+
+To remove this instances
+go to Auto Scaling Group
+Click on that instance
+click on delete
+============================================================================================================================
