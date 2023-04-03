@@ -1,0 +1,470 @@
+===================
+=====Terraform=====
+===================
+This is  tool from Hashi corp to automate infrastructure creation
+It can be integrated with various "providers" like AWS,Azure etc
+
+Setup of terraform on Windows
+===============================
+1 Open https://www.terraform.io/downloads.html
+
+2 Download the version related to windows and extract it
+
+3 Copy the path of the terraform that is extracted
+
+4 Go to Environment varibles--->System varibales--->Hilight Path
+
+5 Click on New and Paste the path of terraform
+
+6 To check if terraform is configures
+  Open cmd prompt
+  terraform -v
+
+======================================================================
+Creating terrafrom scripts on Pycharm IDE
+===========================================
+1 Download and install Pycharm community edition 
+  https://www.jetbrains.com/pycharm/download/
+
+2 Download Terraform pycharm plugin
+  https://plugins.jetbrains.com/plugin/7808-hashicorp-terraform--hcl-language-support/reviews
+
+3 Open pycharm --->Click on File menu--->Setting--->Plugins
+  Click on Setting icon--->Select Plugins from Disk
+  Browse for the Pycharm terraform plugin
+  Restart Pycharm
+
+=========================================================================
+Create IAM user on AWS and give him admin previlages
+Download the user info csv file
+
+=======================================================================
+Providers
+===============
+This is a code library that can communicate with a specific technology
+like AWS,Jenkins,Azure etc
+Providers translate the terrafrom code into a structure that
+the technology can understand
+
+Provider gives access to the complte API of AWS
+
+
+Provides has two components resources and data sources
+resources is used to create services on the aws cloud
+data sources allows us to fetch information about the resources present on AWS
+
+provider "aws" {
+  region = "us-east-1"
+  access_key = "zzzzzzzzzzzzzzzzzzzzz"
+  secret_key = "zzzzzzzzzzzzzzzzzzzzzzz"
+}
+
+To download the above provider 
+Go to the folder where the main.tf folder is present in cmd prompt
+terraform init
+
+Note:
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
+
+It also downloads the code library that helps terraform to integrate with AWS
+
+All the terraform providers info is present at
+registry.terrafrom.io/browse/providers
+======================================================================
+Resources
+===============
+These are subcomponents or modules present in providers which help us
+to automate various services on AWS
+
+Resource naming conventions
+providername_resourcename
+
+=======================================================================
+Terrafrom script to install the AWS providers and create
+a vpc and subnet with it and also an aws ubuntu isntance
+
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "10.0.0.0/24"
+}
+
+resource "aws_subnet" "my_subnet" {
+  cidr_block = "10.0.0.0/25"
+  vpc_id = aws_vpc.my_vpc.id
+  availability_zone = "us-east-2a"
+}
+
+resource "aws_instance" "intelliqit" {
+  ami  = "ami-a1b2c3d4"
+  instance_type = "t2.micro"
+}
+
+
+========================================================================
+Documentation
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+==============================================================================
+==========================================================================
+Naming resource in AWS
+============================
+This is done using tags
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "10.0.0.0/24"
+  tags = {
+     Name= "my_vpc"
+  }
+}
+
+resource "aws_subnet" "my_subnet1" {
+  cidr_block = "10.0.0.0/25"
+  vpc_id = aws_vpc.my_vpc.id
+  availability_zone = "us-east-2a"
+  tags = {
+     Name= "my_subet1"
+  }
+}
+
+resource "aws_instance" "web" {
+  ami  = "ami-a1b2c3d4"
+  instance_type = "t2.micro"
+  tags = {
+     Name= "intelliqit"
+  }
+}
+
+=================================================================================
+data  or datasources
+==============================
+This is used to query info about existing resources
+eg: If we want to create a subnet in an exisiting resource the we
+use this "data source"
+
+Note: respurce is used to create something whereas data is used to return info about an existing component on AWS
+
+
+To capture info about existing default vpc and create subnet in it
+data "aws_vpc" "existing_vpc"{
+   default = true
+}
+
+resource "aws_subnet" "my_subnet2"{
+    vpc_id = data.aws_vpc.existing_vpc.id
+    cidr_block = "10.0.0.0/24"  //give subnet that is available in exisiting vpc
+    availability_zone = "us-west-1b"
+}
+
+
+
+===========================================================================
+
+To destory the above resources
+terrafrom destroy -target aws_subnet.mysubnet1
+
+To destory everyting
+terrafrom destroy
+
+terrafrom plan : This shows the same output as terrafrom apply but
+without making the necessary changes(dry run)
+
+terrafrom apply -auto-approve             like -y option in apt
+
+
+Terrafrom state commands
+terrafrom state list
+terrafrom state show give_resource_name_from_above_output
+
+=======================================================================
+Output values
+=======================
+This is print statements of terrafrom using which we can print info about resources running on aws
+Only one value can be given per resource
+output "some_name_for_output" {
+   value = resource_type.resource_name.attribute
+  Eg:
+  value = aws_vpc.myvpc.id
+}
+To see the list of attributes available run
+terraform apply
+
+==============================================
+Input Variables
+=====================
+These are usefule when we want to pass data to the terraform
+script at the time of running
+This is used for dynamic data
+
+variable "myvpc_cidr"{}
+variable "mysubnet_cidr" {}
+resource "aws_subnet" "my_subnet"{
+  vpc_id = aws_vpc.my_vpc.id
+  cidr_block = var.mysubnet_cidr
+  availability_zone = "ap-south-1a"
+  tags = {
+     Name= "my_subet"
+  }
+}
+
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = var.myvpc_cidr
+  tags = {
+     Name= "my_vpc"
+  }
+}
+
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = var.myvpc_cidr
+  tags{
+     Name= "my_vpc"
+  }
+}
+
+To pass values to this variables we use three ways
+1 terrafrom apply
+  This ask us to prompt some value into the variable
+
+2 terraform apply -var "mysubnet_cidr=10.0.30.0/24"
+
+3 Create a file in the project
+  terraform.tfvars
+  In this file store the variables
+  mysubnet_cidr=10.0.30.0/24
+  terrafrom apply
+  It will automatically read the above file
+
+We can create multiple varibale files in this way for different 
+environments bu terrafrom only looks for a file called terraform.tfvars
+If our variables file name is something different
+terrafrom apply -var-file variables_file_name
+=========================================================================
+Environment Variables
+=============================
+provider "aws" {
+  region = "us-west-1"
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+}
+
+variable "aws_access_key" {}
+
+variable "aws_secret_key" {}
+
+Create a file called terraform.tfvars
+aws_access_key = "AKIAS43BASASEGDMET62"
+aws_secret_key = "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"
+
+
+
+============================================================================
+Terraform project
+============================================================================
+Create an AWS vpc and a subnet on it
+Create a internetgateway and route tables,associate the route table to subnet
+Create a security group with inbound and outbound rules and create an AWS ubuntu
+instance on the above subnet,assign public ips and also a pem key.
+
+provider "aws" {
+  region = "ap-south-1"
+  access_key = "AKIAS43BASASCOFOPNNZ"
+  secret_key = "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"
+
+}
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "10.0.0.0/24"
+  tags = {
+    Name = "myvpc"
+  }
+}
+
+resource "aws_subnet" "my_subnet1" {
+  cidr_block = "10.0.0.0/25"
+  vpc_id = aws_vpc.my_vpc.id
+  availability_zone = "ap-south-1a"
+  tags = {
+    Name = "mysubnet1"
+  }
+}
+
+resource "aws_internet_gateway" "my_gateway" {
+  vpc_id = aws_vpc.my_vpc.id
+  tags = {
+    Name = "mygateway"
+  }
+}
+
+resource "aws_route_table" "my_route_table" {
+  vpc_id = aws_vpc.my_vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.my_gateway.id
+
+  }
+  tags = {
+    Name= "myroutetable"
+  }
+}
+
+resource "aws_security_group" "my_security" {
+  name = "my_security"
+  vpc_id = aws_vpc.my_vpc.id
+  ingress {
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
+resource "aws_route_table_association" "my_association" {
+
+  route_table_id = aws_route_table.my_route_table.id
+  subnet_id = aws_subnet.my_subnet1.id
+}
+resource "aws_instance" "intelliqit" {
+  ami = "ami-0c1a7f89451184c8b"
+  instance_type = "t2.micro"
+  availability_zone = "ap-south-1a"
+  subnet_id = aws_subnet.my_subnet1.id
+  vpc_security_group_ids = [aws_security_group.my_security.id]
+  associate_public_ip_address = true
+  key_name = "mumbai_key"
+  user_data = <<EOF
+     #!/bin/bash
+     sudo apt-get update
+     curl -fsSL https://get.docker.com -o get-docker.sh
+     sh get-docker.sh
+     sudo docker run nginx --name webserver -d -p 8888:80 nginx
+  EOF
+  tags = {
+    Name = "intelliqit"
+  }
+}
+
+==========================================================================
+Above project using variables to make it more reusable
+======================================================================
+provider "aws" {
+  region = "ap-south-1"
+  access_key = "AKIAS43BASASCOFOPNNZ"
+  secret_key = "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"
+
+}
+
+variable "myvpc_cidr" {}
+variable "mysubnet_cidr" {}
+variable "myzone" {}
+variable "route_cidr" {}
+variable "from_port" {}
+variable "to_port" {}
+variable "protocol" {}
+variable "cidr_for_security" {}
+variable "ami" {}
+variable "type" {}
+variable "security_key" {}
+variable "public_ip" {}
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = var.myvpc_cidr
+  tags = {
+     Name = "myvpc"
+  }
+}
+
+resource "aws_subnet" "my_subnet" {
+  cidr_block = var.mysubnet_cidr
+  vpc_id = aws_vpc.my_vpc.id
+  availability_zone = var.myzone
+  tags = {
+    Name = "mysubnet"
+  }
+}
+
+resource "aws_internet_gateway" "my_gateway" {
+  vpc_id = aws_vpc.my_vpc.id
+  tags = {
+    Name = "mygateway"
+  }
+}
+
+resource "aws_route_table" "my_route_table" {
+  vpc_id = aws_vpc.my_vpc.id
+  route {
+    cidr_block = var.route_cidr
+    gateway_id = aws_internet_gateway.my_gateway.id
+  }
+  tags = {
+    Name = "myroute table"
+  }
+}
+resource "aws_route_table_association" "my_association" {
+  route_table_id = aws_route_table.my_route_table.id
+  subnet_id = aws_subnet.my_subnet.id
+
+}
+
+resource "aws_security_group" "my_security" {
+  name = "my_security"
+  vpc_id = aws_vpc.my_vpc.id
+  ingress {
+    from_port = var.from_port
+    protocol = var.protocol
+    to_port = var.to_port
+    cidr_blocks = [var.cidr_for_security]
+  }
+  egress {
+    from_port = var.from_port
+    protocol = var.protocol
+    to_port = var.to_port
+    cidr_blocks = [var.cidr_for_security]
+  }
+  tags = {
+    Name = "mysecurity"
+  }
+}
+
+resource "aws_instance" "intelliqt_server" {
+
+  ami = var.ami
+  instance_type = var.type
+  subnet_id = aws_subnet.my_subnet.id
+  availability_zone = var.myzone
+  vpc_security_group_ids = [aws_security_group.my_security.id]
+  key_name = var.security_key
+  associate_public_ip_address = var.public_ip
+  tags = {
+    Name = "intelliqit"
+  }
+}
+
+
+
+=========================================================================
+Variables files
+=============================
+myvpc_cidr="10.0.0.0/24"
+mysubnet_cidr="10.0.0.0/25"
+myzone = "ap-south-1a"
+route_cidr = "0.0.0.0/0"
+from_port = "0"
+to_port = "0"
+protocol = "-1"
+cidr_for_security = "0.0.0.0/0"
+ami = "ami-0c1a7f89451184c8b"
+type = "t2.micro"
+security_key = "mumbai_key"
+public_ip = true
+
+================================================================================

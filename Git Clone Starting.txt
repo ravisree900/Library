@@ -1,0 +1,55 @@
+In most cases the jenkinsfile is uploaded into the github
+along with the application code by the developers.The jnekinsfile
+for the remote gitserver will  trigger all the stages of ci-cd
+
+Developers Activity
+===========================
+1 Clone the maven project 
+  git clone https://github.com/intelliqittrainings/maven.git
+
+2 Move into this cloned repository and delete the .git folder
+  cd maven
+  rm -rf .git
+
+3 Create a new git repo and send the code into the stagging area and local
+  repository
+  git init
+  git add .
+  git commit -m "a"
+
+4 Create a file called Jenkinsfile and copy paste the Scripted pipeline
+  code.
+
+5 Send it to stagging and local reposiotry
+  git add .
+  git commit -m "b"
+
+4 Open github.com---->Signin into you account
+
+5 Click on + on top right corner---->Click on New repository
+
+6 Enter some reposiotry name--->Select Public or Private
+  Click on Create repository
+
+7 Go to Push an existing reposiotry from command line
+  Copy and paste the first command.This will create a link between the
+  local reposiotry and the remote github repository
+
+8 Copy the second command
+  git push -u origin master
+
+Devops Enginers Activity
+==============================
+1 Open the dashboard of Jenkins
+
+2 Click on New item--->Enter some itemname
+
+3 Select Pipeline project--->OK
+
+4 Go to Pileline section--->Select Pipeline script from SCM
+
+5 Select SCM as Git
+
+6 In Repository url: Enter the github url where we uploaded the code
+
+7 Click on Apply--->Save
