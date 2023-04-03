@@ -1,0 +1,42 @@
+Jenkins-server
+-----------------------------------------------------------
+#!/bin/bash
+sudo apt-get update -y
+sudo hostnamectl set-hostname Jenkins
+sudo apt-get install openjdk-11-jdk -y
+sudo apt-get install maven git -y
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins -y
+================================================
+QA-server
+-------------------------------------------------
+#!/bin/bash
+sudo apt-get update -y
+sudo hostnamectl set-hostname QA-server
+sudo apt-get install tomcat9 -y
+sudo apt-get install tomcat9-admin
+======================================================
+Prod-server
+--------------------------------------------------
+#!/bin/bash
+sudo apt-get update -y
+sudo hostnamectl set-hostname Prod-server
+sudo apt-get install tomcat9 -y
+sudo apt-get install tomcat9-admin
+==============================================
+Addind users in tomcat server
+----------------------------------------------
+<tomcat-users>
+	<user username="thej" password="thej" roles="manager-script/>
+</tomcat-users>
+==================================================
+jenkins download from online--
+wget https://get.jenkins.io/war-stable/2.375.1/jenkins.war
+=====================================================
+
+

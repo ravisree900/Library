@@ -1,0 +1,6 @@
+wild card charecters session 11th -jenkins-linux related information 19:00 min
+-----------------------
+* --->all
+? --->one unknown charecter
+[ ]
+[^ ]
